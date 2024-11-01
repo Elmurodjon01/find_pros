@@ -1,3 +1,4 @@
+import 'package:find_pros/home/view/home_view.dart';
 import 'package:flutter/material.dart';
 
 class AppEntry extends StatelessWidget {
@@ -5,6 +6,8 @@ class AppEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp();
+    return const MaterialApp(
+      home: HomeView(),
+    );
   }
 }
