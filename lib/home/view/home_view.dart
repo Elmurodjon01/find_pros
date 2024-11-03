@@ -61,6 +61,7 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Gap(10),
           Container(
@@ -139,7 +140,7 @@ class _HomeViewState extends State<HomeView> {
                     height: 20,
                     width: 40,
                     decoration: BoxDecoration(
-                      color: Colors.blueGrey.shade400,
+                      color: Colors.black.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
@@ -148,7 +149,9 @@ class _HomeViewState extends State<HomeView> {
                         builder: (context, value, child) => Text(
                           '$value/${urlImages1.length}',
                           style: const TextStyle(
-                              color: Colors.white, fontSize: 12),
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -157,11 +160,30 @@ class _HomeViewState extends State<HomeView> {
               ],
             ),
           ),
+          const Gap(25),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: fourIcons
+                .map(
+                  (iconInfo) => buildIconContainer(
+                    iconInfo: iconInfo,
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                  ),
+                )
+                .toList(),
+          ),
         ],
       ),
     );
   }
 }
+
+List<IconInfo> fourIcons = [
+  IconInfo(icon: Icons.newspaper, label: '고수 찾기'),
+  IconInfo(icon: Icons.people, label: '커뮤니티'),
+  IconInfo(icon: Icons.shop, label: '마켓'),
+  IconInfo(icon: Icons.image, label: '포트폴리오'),
+];
 
 class ScrollableIconRows extends StatelessWidget {
   ScrollableIconRows(this._scrollController);
@@ -193,47 +215,15 @@ class ScrollableIconRows extends StatelessWidget {
           Row(
             children: iconInfo
                 .sublist(0, 6)
-                .map((icon) => _buildIconContainer(iconInfo: icon))
+                .map((icon) => buildIconContainer(iconInfo: icon))
                 .toList(),
           ),
           Row(
             children: iconInfo
                 .sublist(6)
-                .map((icon) => _buildIconContainer(iconInfo: icon))
+                .map((icon) => buildIconContainer(iconInfo: icon))
                 .toList(),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildIconContainer({required IconInfo iconInfo}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 23),
-      child: Column(
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            margin: const EdgeInsets.only(left: 8, right: 8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFAFAFA),
-              borderRadius: BorderRadius.circular(
-                15,
-              ),
-            ),
-            child: Icon(
-              iconInfo.icon,
-              size: 30,
-            ),
-          ),
-          Text(
-            iconInfo.label,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color.fromARGB(255, 91, 91, 91),
-            ),
-          )
         ],
       ),
     );
@@ -247,4 +237,37 @@ class IconInfo {
     required this.icon,
     required this.label,
   });
+}
+
+Widget buildIconContainer(
+    {required IconInfo iconInfo, EdgeInsetsGeometry? margin}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 23),
+    child: Column(
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          margin: margin ?? const EdgeInsets.only(left: 8, right: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFAFAFA),
+            borderRadius: BorderRadius.circular(
+              15,
+            ),
+          ),
+          child: Icon(
+            iconInfo.icon,
+            size: 30,
+          ),
+        ),
+        Text(
+          iconInfo.label,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Color.fromARGB(255, 91, 91, 91),
+          ),
+        )
+      ],
+    ),
+  );
 }
