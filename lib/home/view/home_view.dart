@@ -1,11 +1,27 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:find_pros/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:scroll_indicator/scroll_indicator.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  ScrollController scrollController = ScrollController();
+  ValueNotifier<int> adScrollIndex = ValueNotifier(0);
+
+  final urlImages1 = [
+    'https://i.imgur.com/Y3UejT0.jpg',
+    'https://i.imgur.com/KNFL3qd.jpg',
+    'https://i.imgur.com/fxAH9HY.jpg',
+    'https://i.imgur.com/9GkgdKx.jpg',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,19 +85,88 @@ class HomeView extends StatelessWidget {
             ),
           ),
           const Gap(20),
-          ScrollableIconRows(),
+          ScrollableIconRows(scrollController),
+          ScrollIndicator(
+            scrollController: scrollController,
+            width: 20,
+            height: 3,
+            indicatorWidth: 20,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[300]),
+            indicatorDecoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          const Gap(25),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Stack(
+              children: [
+                CarouselSlider(
+                  options: CarouselOptions(
+                    onPageChanged: (index, reason) =>
+                        adScrollIndex.value = index,
+                    viewportFraction: 1,
+                    initialPage: 0,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 5),
+                    height: 100.0,
+                  ),
+                  items: urlImages1.map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: NetworkImage(i),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 15, top: 70),
+                    height: 20,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.blueGrey.shade400,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: ValueListenableBuilder(
+                        valueListenable: adScrollIndex,
+                        builder: (context, value, child) => Text(
+                          '$value/${urlImages1.length}',
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class ScrollableIconRows extends StatefulWidget {
-  @override
-  State<ScrollableIconRows> createState() => _ScrollableIconRowsState();
-}
+class ScrollableIconRows extends StatelessWidget {
+  ScrollableIconRows(this._scrollController);
+  final ScrollController _scrollController;
 
-class _ScrollableIconRowsState extends State<ScrollableIconRows> {
   final List<IconInfo> iconInfo = [
     IconInfo(icon: Icons.home, label: '전체보기'),
     IconInfo(icon: Icons.person, label: '이사/청소'),
@@ -96,42 +181,28 @@ class _ScrollableIconRowsState extends State<ScrollableIconRows> {
     IconInfo(icon: Icons.star, label: '이벤트/뷰티'),
     IconInfo(icon: Icons.alarm, label: '기타')
   ];
-  final scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    return ScrollbarTheme(
-      data: ScrollbarThemeData(
-        minThumbLength: 20, // Adjust the minimum thumb length
-        thumbColor:
-            MaterialStateProperty.all(Colors.blue), // Customize color if needed
-      ),
-      child: Scrollbar(
-        thumbVisibility: true,
-        interactive: true,
-        controller: scrollController,
-        thickness: 2, // Adjust scrollbar thickness
-        radius: Radius.circular(10),
-        child: SingleChildScrollView(
-          controller: scrollController,
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.only(left: 10),
-          child: Column(
-            children: [
-              Row(
-                children: iconInfo
-                    .sublist(0, 6)
-                    .map((icon) => _buildIconContainer(iconInfo: icon))
-                    .toList(),
-              ),
-              Row(
-                children: iconInfo
-                    .sublist(6)
-                    .map((icon) => _buildIconContainer(iconInfo: icon))
-                    .toList(),
-              ),
-            ],
+    return SingleChildScrollView(
+      controller: _scrollController,
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.only(left: 10),
+      child: Column(
+        children: [
+          Row(
+            children: iconInfo
+                .sublist(0, 6)
+                .map((icon) => _buildIconContainer(iconInfo: icon))
+                .toList(),
           ),
-        ),
+          Row(
+            children: iconInfo
+                .sublist(6)
+                .map((icon) => _buildIconContainer(iconInfo: icon))
+                .toList(),
+          ),
+        ],
       ),
     );
   }
