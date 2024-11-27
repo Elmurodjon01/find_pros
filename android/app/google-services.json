@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "321048273351",
+    "project_id": "social-algorithms-166c7",
+    "storage_bucket": "social-algorithms-166c7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321048273351:android:c19642eb23d8a74b14f9e2",
+        "android_client_info": {
+          "package_name": "com.social.algorithm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPEfh8yMz-rtsCbHktfOXA1QGy2wg2IfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
